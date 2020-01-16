@@ -14,6 +14,6 @@ void runTimer(){
     // print the time with printTime(int)
     printTime(timer_seconds);
     // wait 1 second
-    delay(1000);
+    delay(100);
   }
 }
