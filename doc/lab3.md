@@ -122,10 +122,7 @@ Date: 01/29/2020
 
 >Q. How many states do you need? Describe in words what each state does and it’s transition logic. Draw the state machine
 
->A. The first state, timer_seconds should be 0 and the watch is waiting for the first tap. When a tap is detected, timer_seconds is incremented once and the machine goes to the second state. At the second state, it constantly checks time_now - time_last_tap  >= 3 seconds. If during these 3 seconds a tap is detected, time_last_tap is reset to millis() and it remains at the 2nd state. If 3 seconds pass, it goes onto the 3rd state where the clock starts to count down each second. It remains at this state until timer_seconds is decremented all the way back to 0. When it hits 0, the motor will buzz until it detects a tap. After it detects a tap it will return to the first state.
-
-![Image of Challenge](fig/state.jpeg)
-
+>A. The first state, timer_seconds should be 0 and the watch is waiting for the first tap. When a tap is detected, timer_seconds is incremented once and the machine goes to the second state. At the second state, it constantly checks time_now - time_last_tap  >= 3 seconds. If during these 3 seconds a tap is detected, time_last_tap is reset to millis() and it remains at the 2nd state. If 3 seconds pass, it goes onto the 3rd state where the clock starts to count down each second. It remains at this state until timer_seconds is decremented all the way back to 0. When it reaches 0, the watch goes back to the first state.
 
 ### Challenge 6: Gesture Controlled Watch
 
