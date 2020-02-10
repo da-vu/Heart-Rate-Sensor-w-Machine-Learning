@@ -7,11 +7,11 @@ bool detectTap(){
   readADC();
   bool tap_detected = false; // first set to false
   if(accelZ_Val >= uthreshZ && accelY_Val >= uthreshY && accelX_Val >= uthreshX){
-    printADC();
+   // printADC();
     tap_detected = true; //if the accel values meet the rule, set to true
   }
   else if(accelZ_Val <= lthreshZ && accelY_Val <= lthreshY && accelX_Val <= lthreshX){
-    printADC();
+   // printADC();
     tap_detected = true;
   }
   return tap_detected;

@@ -27,6 +27,7 @@ void stateMachineTimer(){
   }
   else if (timer_state == 1){
     if(detectTap()) {
+      Serial.print("POOPY\n");
       addTimerOLED();
       time_last_tap = millis();
     }
