@@ -56,15 +56,15 @@ void setup() {
   // put your setup code here, to run once:
   initDisplay();
   Serial.begin(9600);
-  setupMotor();
-  setupADC();
-  calibrate(); //determines resting threshold - takes ~15 seconds
+ // setupMotor();
+  //setupADC();
+  //calibrate(); //determines resting threshold - takes ~15 seconds
   
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
- // Lab2_C3();
-  stateMachineTimer();
+  Lab2_C3();
+ // stateMachineTimer();
   
 }
