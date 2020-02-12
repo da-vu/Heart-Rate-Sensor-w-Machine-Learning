@@ -10,7 +10,7 @@ import serial
 #Make the variables below global
 string_buffer = []
 data_array = np.array([])
-
+sample_number = 0
 
 
 def setup_serial():
@@ -35,7 +35,7 @@ def receive_data(ser):
     S_List = ['start',' data', '\n']
     for S in S_List:
         ser.write(S.encode('utf-8'))
-    while True:
+    while sample_number < 100:
         try:
             receive_sample(ser)
         except(KeyboardInterrupt):
@@ -46,15 +46,29 @@ def receive_data(ser):
             ser.close() #we'll use ctrl+c to stop the program
             print("Exiting program due to KeyboardInterrupt")
             break
-   
+    S_List = ['stop',' data','\n']
+    for S in S_List:
+        ser.write(S.encode('utf-8'))
+    ser.close()
+    return data_array
+
+def calc_sampling_rate(data_array):
+    time_arr = data_array[:,0]
+    print("DIFF")
+    diff_arr = np.diff(time_arr)
+    srate = np.mean(diff_arr)
+    print(srate)
+    
         
 def receive_sample(ser):
     global string_buffer
     global data_array
+    global sample_number
     
     # read a byte from serial (remember to decode)
     s = ser.read(1).decode('utf-8') #read_serial4(ser);
     if(s == '\n'):
+        sample_number = sample_number + 1
         data_string = ''.join(string_buffer)
         print(data_string)
         temp_data_array = np.fromstring(data_string,sep=',')#csv string to 1x4 np array
@@ -68,7 +82,7 @@ def receive_sample(ser):
       
 if __name__== "__main__":
     ser = setup_serial()
-    receive_data(ser);
-
-
+    data_array = receive_data(ser)
+    calc_sampling_rate(data_array)
+    ser.close()
 
