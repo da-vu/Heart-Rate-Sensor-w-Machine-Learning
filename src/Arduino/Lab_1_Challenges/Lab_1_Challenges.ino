@@ -20,8 +20,6 @@ setupMessage();
 }
 // the loop function runs over and over again forever
 void loop() {
-//condition4();
-//condition5();
-//condition6();
+
 Lab1_C2();
 } 
