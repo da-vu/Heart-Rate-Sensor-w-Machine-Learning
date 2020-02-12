@@ -216,21 +216,22 @@ Date: 02/11/2020
 
 >Q. What happens if you don’t decode the incoming char?
 
-> A.
+> A. It will never receive the '\n' because it has not decoded the byte.
 
 > Q. Try removing the logic for checking if the data_array is empty and always vstack even if the data_array is empty. What is the error that gets thrown? Why?
 
-> A.
+> A. Error: `all the input array dimensions for the concatenation axis must match exactly, but along dimension 1, the array at index 0 has size 0 and the array at index 1 has size 4`  
+> This happens because at the beginning of the sampling, array_data has no value and it can not vstack an array of size 4 to an array of size 0.
 
 > Q. Try removing the 1 second delay on the MCU when starting data sending. Describe what happens?
 
-> A.
+> A. Besides the omitted 1 second delay no longer being there, I do not notice any other changes. 
 
 ### Challenge 3: Calculate the Sampling Rate
 
 > Q. Start with Baud rate of 115200. What is your calculated sampling rate when you set the sampling rate to 10Hz,50Hz,100Hz,1000Hz on the MCU. Make a plot (using a spreadsheet program) of the actual sampling rate (y-axis) vs expected sampling rate (x-axis).
 
-> A.
+> A. 
 
 > Q. How does this change with Baud rate 9600 vs 115200 vs 230400 vs 460800. For 1000Hz, make a plot of the actual sampling rate (y-axis) vs Baud Rate (x-axis).
 

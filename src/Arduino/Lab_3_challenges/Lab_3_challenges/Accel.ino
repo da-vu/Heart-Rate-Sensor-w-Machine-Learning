@@ -2,9 +2,6 @@
 int accelZ = A0;
 int accelY = 39;//assign pin value
 int accelX = 34;//assign pin value
-int accelZ_Val = 0;//set to 0
-int accelY_Val = 0;//set to 0
-int accelX_Val = 0;//set to 0
 
 // ======== ADC Code ======== //
 void setupADC(){

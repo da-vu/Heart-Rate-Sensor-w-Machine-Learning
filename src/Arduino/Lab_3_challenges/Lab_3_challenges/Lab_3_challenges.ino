@@ -12,6 +12,11 @@ int lthreshZ;//determine the lower threshold you need
 int lthreshY;
 int lthreshX;
 
+//ACCEL VARs
+int accelZ_Val = 0;//set to 0
+int accelY_Val = 0;//set to 0
+int accelX_Val = 0;//set to 0
+
 void Lab1_C2(){
   if(!getButton()){
     addTimer();
@@ -60,6 +65,13 @@ void Lab2_C4(){
 }
 
 
+//LAB 3 STUFF
+
+void lab3(){
+  receiveMessage();
+  sendData();
+}
+
 
 
 
@@ -80,6 +92,6 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
  // Lab2_C3();
-  stateMachineTimer();
-  
+ // stateMachineTimer();
+  lab3();
 }
