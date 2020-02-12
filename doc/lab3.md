@@ -59,33 +59,47 @@ Date: 02/11/2020
 
 > Q. Describe the output you observe on the Python side? Is it the same as before? What does this tell you about the print() function of python?
 
-> A.
+> A. This time, it reads and appends all 30 bytes into a string which then prints it all out at once. 
 
 
 ### Knowing when to quit
 
 > Q. We purposely made a few errors above. What were they?
 
-> A. 
+> A. `Try:` --> `try:`   
+> &nbsp;&nbsp;&nbsp; `s = ser.read(1)`  --> `s = ser.read(1).decode('utf-8')`    
 
 ### Numpy
 
 ###### Numpy Array
-> Q. Show the code - Make an Numpy Array called test_array  from a `list = [0,10,4,12]`. Subtract 20 from the test_array, what do you get? What is the shape of the test_array
+> Q. Show the code - Make an Numpy Array called test_array  from a list = `[0,10,4,12]`. Subtract 20 from the test_array, what do you get? What is the shape of the test_array
 
-> A.
-
-> Q. Show the code - Make a 2D array of test_2D_array from:
+> A. Code:
 >
->     [0,10,4,12]
->     [1,20,3,41]  
+>     test_array = np.array( [0,10,4,12])
+>     print(test_array-20)
+>     print(test_array.shape)
+>     print(test_array.dtype)
+> Output:
+>
+>     [-20 -10 -16  -8] # array after subtracting 20
+>     (4,) # shape of array 4x1
+>     int32
 
-> A.
+> Q. Show the code - Make a 2D array of test_2D_array from:  
+> `[0,10,4,12]`  
+> `[1,20,3,41]`  
+
+> A. Code: 
+> 
+>     test_2D_array = np.array([(0,10,4,12),
+>                               (1,20,3,41)])
+>     print(test_2D_array.shape)
 
 ###### Zeros and Ones
 > Q. Make a 2D array of zeros with shape of 10x20 and then print it out
 
-> A. 
+> A. Code: `print(np.zeros((10,20)))`
 
 ###### hstack and vstack
 > Q. Show the code - Out of the test_array, create the following using hstack and vstack.
@@ -95,22 +109,36 @@ Date: 02/11/2020
 >     [0,10,4,12,0,10,4,12]
 >     [0,10,4,12,0,10,4,12]
 
-> A.
+> A. Code:
+> 
+>     test_array = np.array([0,10,4,12])
+>     h_arr = np.hstack((test_array, test_array))
+>     v_arr = np.vstack((h_arr,h_arr))
+>     final_arr =np.vstack((v_arr,v_arr))
+>     print(final_arr)
 
 ###### arange
 > Q. Show the code - Using arange, make an array called arange_array1 to equal `[-3, 3,9,15]` and arange_array2 to equal `[ -7,  -9, -11, -13, -15, -17, -19]`
 
-> A.
+> A. Code:
+> 
+>     arange_array1 = np.arange(-3,16,6)
+>     arange_array2 = np.arange(-7,-20,-2)
+>     print(arange_array1)
+>     print(arange_array2)
 
 ###### linspace
 >   Q. Make an array call linspace_array using linspace that goes from 0 to 100 with 49 steps. 
 
-> A.
+> A. Code:
+>
+>     linspace_array = np.linspace(0,100,num=49)
+>     print(linspace_array)
 
 
 > Q. How does linspace and arange differ? When might you use one over the other?
 
-> A.
+> A. linspace arranges the array with evenly spaced samples or steps, where you specify the number of steps. It also ends exactly on the end point. arange arranges the array with evenly stepped elements but you specify the step yourself. arange may end before the endpoint if the specified step exceeds the endpoint. You might want to use linspace when you want evenly spaced steps in a range but you dont know how large each step should be. 
 
 ###### Indexing and slicing
 > Q. What is an array of size 3x4 that would produce the following results. Show your work on how you deduced your answer on paper or some kind of graphics :
@@ -123,21 +151,49 @@ Date: 02/11/2020
 >     print(e[:,2])   >>> [1 1 3]
 >     print(e[1,3])   >>> 2
 
-> A. 
-
+> A.  
+> `print(e[0])     >>> [12 3 1 2]` --> first row = [(12, 3, 1, 2)]  
+> `print(e[1,0])   >>> 0` --> row 2, column 1 = 0   
+> `print(e[:,1])   >>> [3 0 2]` --> column 2 = [(3, 0, 2)]  
+> `print(e[2, :2]) >>> [4 2]` --> first 2 elements of 3rd row = [(4, 2)]  
+> `print(e[2, 2:]) >>> [3 1] ` --> row 3, last elements 3rd and 4th elements = [(4, 2)]  
+> `print(e[:,2])   >>> [1 1 3]` --> column 3 = [(1,1,3)]  
+> `print(e[1,3])   >>> 2` --> row 2, column 4 = 2  
 
 ###### setting values of array
 
 > Q. Show your code - Now solve the above indexing and slicing problem by writing the code using array assignment.
 
-> A. 
+> A. Code:
+>
+>     e = np.zeroes((3,4))
+>     e[1,0] = 0
+>     e[:,1] = [(3, 0, 2)]
+>     e[2, :2] = [(4, 2)]
+>     e[2, 2:] = [(3,2)]
+>     e[:,2] = [(1,1,3)]
+>     e[1.3] = 2
+>
+>Output:
+>
+>     [[0. 3. 1. 0.]
+>     [0. 0. 1. 2.]
+>     [4. 2. 3. 2.]]
 
 ###### Setting values of array from comma separated values
 
 > Q. Using fromstring, vstack, and a for loop, create an array of 100x4 from s:  
 > `[[1,2,3,4],[1,2,3,4],[1,2,3,4]…..[1,2,3,4]]`
 
-> A.
+> A. Code:  
+>
+>     s = '1,2,3,4'
+>     print(s)
+>     arr = np.fromstring(s,dtype=int,sep=',')
+>     final_array = arr
+>     for x in range(100):
+>         final_array = np.vstack((final_array,arr))
+>     print(final_array)
 
 - - - 
 ## Challenges:
