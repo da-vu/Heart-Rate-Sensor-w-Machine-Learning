@@ -68,7 +68,6 @@ void Lab2_C4(){
 //LAB 3 STUFF
 
 void lab3(){
-  receiveMessage();
   sendData();
 }
 
@@ -82,7 +81,7 @@ void setup() {
   setupMessage();
   
   initDisplay();
-  Serial.begin(9600);
+  //Serial.begin(9600);
   setupMotor();
   setupADC();
   calibrate(); //determines resting threshold - takes ~15 seconds

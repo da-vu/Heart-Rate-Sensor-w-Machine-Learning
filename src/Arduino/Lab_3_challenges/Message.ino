@@ -7,13 +7,11 @@
 //
 //void setupMessage(){
 //  // Serial begin at 9600 
-//  Serial.begin(9600);
+//  Serial.begin(115200);
 //}
 //
 //void printTime(int integer_to_print){
 //  // Serial print integer_to_print
-//  Serial.print(millis());
-//  Serial.print(": ");
 //  Serial.println(integer_to_print);
 //}
 //
@@ -50,6 +48,7 @@
 //
 //
 //void sendData(){
+//    receiveMessage();
 //    if(sending_data){
 //      unsigned long now = micros();
 //        if(now - last_sample_time > sampling_delay){

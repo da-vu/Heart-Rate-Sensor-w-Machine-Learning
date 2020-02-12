@@ -8,7 +8,6 @@ int in_text_index = 0;
 
 
 void setupMessage(){
-  // Serial begin at 9600 
   SerialBT.begin("DAVU_FireBeetle");
 }
 
@@ -23,10 +22,10 @@ void receiveMessage(){
     char incomingChar = SerialBT.read(); // read byte from serial
     if (incomingChar == '\n'){ 
       //show the in_text with show message
+      checkMessage();
       showMessage(in_text, 1, true);
       //reset the in_text index back to 0
       in_text_index = 0;
-      checkMessage();
       memset(in_text,0,20); // this will clear the in_text buffer
     }
     else{
@@ -50,6 +49,7 @@ bool sending_data = false; //to send data?
 
 
 void sendData(){
+    receiveMessage();
     if(sending_data){
       unsigned long now = micros();
         if(now - last_sample_time > sampling_delay){
@@ -83,7 +83,7 @@ void checkMessage(){
   String message = String(in_text); // converts in_text into a string
   if(message == "start data"){
     sending_data = true;
-    delay(1000);
+    delay(2000);
   }
   else if(message == "stop data"){
     sending_data = false;
