@@ -1,4 +1,5 @@
-int timer_seconds = 0;
+// ========= Timer Var ========= //
+int timer_state = 0;
 
 void addTimer(){
   // add one to timer_seconds

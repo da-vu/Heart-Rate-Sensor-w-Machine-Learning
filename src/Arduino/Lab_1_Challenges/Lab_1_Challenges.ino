@@ -8,8 +8,6 @@ void Lab1_C2(){
   else{
     runTimer();
   }
-      
-      
 }
 
 void setup() {

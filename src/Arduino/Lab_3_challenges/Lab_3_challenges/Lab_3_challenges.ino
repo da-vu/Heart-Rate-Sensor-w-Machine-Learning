@@ -12,7 +12,6 @@ int lthreshZ;//determine the lower threshold you need
 int lthreshY;
 int lthreshX;
 
-
 void Lab1_C2(){
   if(!getButton()){
     addTimer();
@@ -20,7 +19,7 @@ void Lab1_C2(){
   }
   else{
     runTimer();
-  }   
+  }
 }
 
 
@@ -44,10 +43,10 @@ if(detectTap()) {
   }
 }
 
-
 void Lab2_C3(){
   receiveMessage();
 }
+
 
 void Lab2_C4(){
   if(detectTap()) {
@@ -58,24 +57,29 @@ void Lab2_C4(){
   if(now - time_last_tap >= 3000){
     runTimerOLED();
   }
-  
-
-
-
-
-
-// MAIN//
-
-void setup() {
-initDisplay();
-Serial.begin(9600);
-setupLED(); //keep it from challenge 1
-setupButton();
-setupMessage();
-calibrate();
-
 }
-// the loop function runs over and over again forever
+
+
+
+
+
+//MAIN//
+void setup() {
+  setupLED(); //keep it from challenge 1
+  setupButton();
+  setupMessage();
+  
+  initDisplay();
+  Serial.begin(9600);
+  setupMotor();
+  setupADC();
+  calibrate(); //determines resting threshold - takes ~15 seconds
+  
+}
+
 void loop() {
-Lab1_C2();
-} 
+  // put your main code here, to run repeatedly:
+ // Lab2_C3();
+  stateMachineTimer();
+  
+}
