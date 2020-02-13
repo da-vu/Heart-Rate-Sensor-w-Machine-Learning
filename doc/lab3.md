@@ -223,9 +223,9 @@ Date: 02/11/2020
 
 > A.
 
->Q. What happens if you use millis instead of micros for timing and Why?
+> Q. What happens if you use millis instead of micros for timing and Why?
 
-> A.
+> A.  
 - - -
 ## Part 2
 
@@ -233,4 +233,4 @@ Date: 02/11/2020
 
 > In a video, show the MCU unplugged from USB and powered by the battery. Use the Python code to request the device to send a chunk of data and calculate the sampling rate. 
 
-> A
+> A ![Image of Challenge](fig/bt.gif)

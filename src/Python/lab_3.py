@@ -69,7 +69,8 @@ def calc_sampling_rate(data_array):
     time_arr = data_array[:,0]
     print("SAMPLING RATE IS: ")
     diff_arr = np.diff(time_arr)
-    srate = np.mean(diff_arr)
+    sper = np.mean(diff_arr) * 1000000
+    srate = (1 / sper) 
     print(srate)
     
         
