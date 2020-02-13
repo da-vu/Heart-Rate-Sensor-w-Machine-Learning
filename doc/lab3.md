@@ -217,15 +217,17 @@ Date: 02/11/2020
 
 > Q. Start with Baud rate of 115200. What is your calculated sampling rate when you set the sampling rate to 10Hz,50Hz,100Hz,1000Hz on the MCU. Make a plot (using a spreadsheet program) of the actual sampling rate (y-axis) vs expected sampling rate (x-axis).
 
-> A. 
+> A. constant baudrate: 115200  
+>![Image of Challenge](fig/c3q1.jpg)
 
 > Q. How does this change with Baud rate 9600 vs 115200 vs 230400 vs 460800. For 1000Hz, make a plot of the actual sampling rate (y-axis) vs Baud Rate (x-axis).
 
-> A.
+> A. ![Image of Challenge](fig/c3q2.jpg)  
+> It seems like the actual sampling rate is determined by the baudrates and not so much the sampling rate that we set. The is probably due to the amount of data that can be sent to the serial monitor (aka baudrate)
 
 > Q. What happens if you use millis instead of micros for timing and Why?
 
-> A.  
+> A.  In millis, 9600 gave 50hz and 460800 gave 1000hz. We just get the data with less significant figures because the time is in milliseconds instead of microseconds. 
 - - -
 ## Part 2
 
