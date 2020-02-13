@@ -198,20 +198,6 @@ Date: 02/11/2020
 - - - 
 ## Challenges:
 
-### Challenge 1: Setting your Watch to Send Data
-
-> Q. What happens if you don’t decode the incoming char?
-
-> A. 
-
-> Q. Try removing the logic for checking if the data_array is empty and always vstack even if the data_array is empty. What is the error that gets thrown? Why?
-
-> A.
-
-> Q. Try removing the 1 second delay on the MCU when starting data sending. Describe what happens?
-
-> A.
-
 ### Challenge 2: Reading Accelerometer Data
 
 >Q. What happens if you don’t decode the incoming char?
