@@ -16,9 +16,9 @@ sample_number = 0
 
 def setup_serial():
     # serial_name = 'COM3'
-    # serial_name = '/dev/cu.usbserial-143230'
-    serial_name = '/dev/cu.DAVU_FireBeetle-ESP32SPP'
-    ser = serial.Serial(serial_name, 115200)  # open serial port
+    serial_name = '/dev/cu.usbserial-143230'
+    # serial_name = '/dev/cu.DAVU_FireBeetle-ESP32SPP'
+    ser = serial.Serial(serial_name, 9600)  # open serial port
     print(ser.name)         # check which port was really used
     return ser
 
@@ -69,8 +69,8 @@ def calc_sampling_rate(data_array):
     time_arr = data_array[:,0]
     print("SAMPLING RATE IS: ")
     diff_arr = np.diff(time_arr)
-    sper = np.mean(diff_arr) * 1000000
-    srate = (1 / sper) 
+    sper = np.mean(diff_arr)
+    srate = (1 / sper) * 1000
     print(srate)
     
         
