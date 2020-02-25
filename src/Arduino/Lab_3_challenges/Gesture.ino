@@ -31,7 +31,7 @@ void calibrate(){
   
   
   
-  while(t < 5000){
+  while(t < 10000){
     accelZ_Val = analogRead(accelZ);
     accelY_Val = analogRead(accelY);
     accelX_Val = analogRead(accelX);

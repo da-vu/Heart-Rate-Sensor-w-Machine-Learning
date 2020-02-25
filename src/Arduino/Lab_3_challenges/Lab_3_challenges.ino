@@ -17,6 +17,9 @@ int accelZ_Val = 0;//set to 0
 int accelY_Val = 0;//set to 0
 int accelX_Val = 0;//set to 0
 
+//HR DATA
+int HR_Data=0;
+
 void Lab1_C2(){
   if(!getButton()){
     addTimer();
@@ -81,10 +84,10 @@ void setup() {
   setupMessage();
   
   initDisplay();
-  //Serial.begin(9600);
   setupMotor();
   setupADC();
-  calibrate(); //determines resting threshold - takes ~15 seconds
+  setupHR();
+ // calibrate(); //determines resting threshold - takes ~15 seconds
   
 }
 

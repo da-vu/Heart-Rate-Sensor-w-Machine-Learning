@@ -7,7 +7,7 @@ int in_text_index = 0;
 
 void setupMessage(){
   // Serial begin at 9600 
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void printTime(int integer_to_print){
@@ -40,7 +40,7 @@ void receiveMessage(){
 // LAB 3 STUFF
 
 
-int sampling_rate = 10; //sampling rate in Hz
+int sampling_rate = 50; //sampling rate in Hz
 unsigned long sampling_delay = calcSamplingDelay(sampling_rate); //microseconds between samples
 unsigned long last_sample_time = 0; //microsecond of last sample
 
@@ -50,10 +50,11 @@ bool sending_data = false; //to send data?
 void sendData(){
     receiveMessage();
     if(sending_data){
-      unsigned long now = millis();
+      unsigned long now = micros();
         if(now - last_sample_time > sampling_delay){
-            last_sample_time = millis();//update last_sample_time with current micros()  
+            last_sample_time = micros();//update last_sample_time with current micros()  
             readADC();//read all ADC values
+            readHR();
            Serial.print(last_sample_time);
            Serial.print(",");
            //Serial.print(": X Value:");
@@ -63,7 +64,9 @@ void sendData(){
            Serial.print(accelY_Val);
            Serial.print(",");
            //Serial.print(": Z Value:");
-           Serial.print(accelZ_Val);//Serial print last_sample_time,x_val,y_val,z_val\n
+           Serial.print(accelZ_Val);
+           Serial.print(",");
+           Serial.print(HR_Data);
            Serial.print("\n");
         }
     }
@@ -74,15 +77,15 @@ void sendData(){
 
 long calcSamplingDelay(long sampling_rate){
   int temp = 1 / sampling_rate;
-  temp = temp*1000;
-    return temp;//number of microseconds to wait between samples
+  temp = temp*1000000;
+    return 1000000/sampling_rate;//number of microseconds to wait between samples
 }
 
 void checkMessage(){
   String message = String(in_text); // converts in_text into a string
   if(message == "start data"){
     sending_data = true;
-    delay(1000);
+    delay(2000);
   }
   else if(message == "stop data"){
     sending_data = false;

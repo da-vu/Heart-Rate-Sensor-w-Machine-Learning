@@ -66,6 +66,8 @@
 //           //Serial.print(": Z Value:");
 //           SerialBT.print(accelZ_Val);//Serial print last_sample_time,x_val,y_val,z_val\n
 //           SerialBT.print("\n");
+//           SerialBT.print("\n");
+//           SerialBT.print(HR_Data)
 //        }
 //    }
 //}
