@@ -56,7 +56,7 @@ A14596430
 
 > Q9. Try your best to replicate the above plot by shaking your accelerometer. The above was sampled at 50Hz for 10 seconds. Make a gif of you running your program, shaking your accelerometer, and a plot showing up similar to the one above
 
-> A9.  
+> A9.![Image of Challenge](fig/lab4.gif)  
 > ![Image of Challenge](fig/plot2.png)
 
 > Q10. What is approximately the frequency of oscillation of the x axis signal in the plot above?
@@ -147,6 +147,7 @@ A14596430
     int adcRange = 4096; //Options: 2048, 4096, 8192, 16384
 
 > ![Image of Challenge](fig/ideal_settings.png)
+> ![Image of Challenge](fig/lab4.2.gif)
 
 
 ### Challenge 2: 
