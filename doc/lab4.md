@@ -160,6 +160,24 @@ A14596430
 
 > A. -0.01 was the threshold that worked best for me. I determined plotting all 10 data signals that I recorded earlier and seeing which is the smallest value that is crossed when a heartbeat is detected.
 
+> Q. Show a scatter plot of your heart rate calculation (y axis) vs the heart rate of the reference. Calculate the Root Mean Squared Error (RMSE) of your detected heart rate vs the reference heart rate. RMSE is calculated as the square root of the mean of the square of the difference between your estimated heart rate and the reference heart rate.
+
+> ![Image of Challenge](fig/rmseJPG.JPG)
+>RMSE: 2.627  
+> 
+>     Data:  
+>     Calculated      Reference
+>     75	            72
+>     74	            72
+>     77	            78
+>     128	            126
+>     86	            84
+>     77	            78
+>     80	            84
+>     85	            84
+>     80	            78
+>     83	            78
+
 
 
 ### Challenge 3:

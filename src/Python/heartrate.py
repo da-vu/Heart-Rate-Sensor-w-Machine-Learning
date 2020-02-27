@@ -30,8 +30,8 @@ def calc_heart_rate_time(signal,fs):
             count = count+1
     print(count)
     #Calculate the beats per minute. 
-    beats = count * 6
-    print(beats)
+    bpm = count * 6
+    print(bpm)
 
 def normalize_signal(signal):
     #find min of signal
@@ -107,11 +107,12 @@ def plotData(data_array):
 
 if __name__== "__main__":
     
-    data_array_saved = np.genfromtxt('data_04_128.csv', delimiter=',') 
+    data_array_saved = np.genfromtxt('data_10_083.csv', delimiter=',') 
     plotData(data_array_saved)
-    
     signal = data_array_saved[:,4]
     calc_heart_rate_time(signal, 50)
+    
+    
     
     
     
