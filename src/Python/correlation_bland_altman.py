@@ -11,10 +11,10 @@ import numpy as np
 from scipy.stats import pearsonr
 import matplotlib.pyplot as plt
 
-data_array = np.genfromtxt('02_01_071.csv', delimiter=',')
 
-gnd =  71 #reference heart rate
-est =   #estimate of your algorithm
+
+gnd =  np.array([71,82,74,80,80,90,87,77,85,85]) #reference heart rate
+est =  np.array([64,75,73,77,76,83,80,72,77,88]) #estimate of your algorithm
 
 [R,p] = pearsonr(gnd,est)
 
@@ -27,12 +27,12 @@ plt.text(min(gnd) + 2,max(est)+2,"R="+str(round(R,2)))
 plt.ylabel("estimate HR (BPM)")
 plt.xlabel("reference HR (BPM)")
 
-avg = #take the average of gnd and est
-dif = #take the difference of gnd and est
-std = #get the standard deviation of the difference (using np.std)
-bias = #the mean value of the difference
-upper_std = #the bias plus 1.96 times the std
-lower_std = #the bias minus 1.96 times the std
+avg = np.mean(np.array([ gnd, est ]), axis=0 )#take the average of gnd and est
+dif =  (gnd-est)#take the difference of gnd and est
+std =  np.std(dif)#get the standard deviation of the difference (using np.std)
+bias = np.mean(dif)#the mean value of the difference
+upper_std = (bias+1.96*std) #the bias plus 1.96 times the std
+lower_std = (bias-1.96*std)#the bias minus 1.96 times the std
 
 plt.subplot(122)
 plt.scatter(avg, dif)

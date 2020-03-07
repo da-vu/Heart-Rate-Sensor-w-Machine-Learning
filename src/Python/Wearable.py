@@ -4,9 +4,6 @@ Created on Wed Feb 26 17:50:38 2020
 
 @author: Dan
 """
-from Libraries.Connection import Connection
-from Libraries.Visualize import Visualize
-import numpy as np
 
 from Libraries.Connection import Connection
 from Libraries.Visualize import Visualize
