@@ -68,3 +68,7 @@ class Visualize:
         plt.ylabel("R Amplitude")
 
         plt.show()
+        
+        
+        
+    

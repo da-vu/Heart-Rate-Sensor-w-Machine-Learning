@@ -19,23 +19,28 @@ class Connection:
         self.setup_connection()
         self.string_buffer = []
 
-    def setup_connection(self): # open serial port
-        self.ser = serial.Serial(self.serial_name, self.baud_rate)             
-        print(self.ser.name)
-    
-    def close_connection(self): #close the serial connection
-        self.ser.close()                                                       
         
-    def send_serial(self, message): #write message to serial
-        self.ser.write(message.encode('utf-8'))                                
-
-    def read_serial(self): #read a byte at a time and print to console
-        s = self.ser.read(1).decode('utf-8')
-        print(s)                                                               
+    def setup_connection(self):
+        self.ser = serial.Serial(self.serial_name, self.baud_rate)  # open serial port
     
-    def start_streaming(self): # send 'Start Data\n' through serial
-        message = 'start data\n'
-        self.send_serial(message)
+    def close_connection(self):
+        self.ser.close()
+        
+    def send_serial(self, message):
+        self.ser.write(message.encode('utf-8'))         # write a string
+
+    def read_serial(self):
+        while True:
+            try:
+                s = self.ser.read(1).decode('utf-8')        # read 1 byte
+                print(s)
+            except(KeyboardInterrupt):
+                self.close_connection()
+                print("Exiting program due to KeyboardInterrupt")
+                break
+    
+    def start_streaming(self):
+        self.send_serial('start data\n')
     
     def receive_data(self):
         c = self.ser.read(1).decode('utf-8')         # read 1 byte
@@ -43,13 +48,13 @@ class Connection:
             data_string = ''.join(self.string_buffer)
             print(data_string)
             temp_data_array = np.fromstring(data_string,dtype=int,sep=',')
-            self.data.add_data(temp_data_array) #using the Data module
+            self.data.add_data(temp_data_array)
             self.string_buffer = []
         else:
            self.string_buffer.append(c)
-          
-    def end_streaming(self): # send 'Stop Data\n' through serial
-        message = 'stop data\n'
-        self.send_serial(message)
+    
+    def end_streaming(self):
+        self.send_serial('stop data\n')
+
 
 
