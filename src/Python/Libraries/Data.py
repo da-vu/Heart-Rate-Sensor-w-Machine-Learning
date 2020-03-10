@@ -20,6 +20,6 @@ class Data:
     def calc_sampling_rate(self):
         mean_diff = np.mean(np.diff(self.data_array[:,0],1,0))
         self.sampling_rate = 1000000/mean_diff
-        print(self.sampling_rate)
+        #print(self.sampling_rate)
         return self.sampling_rate
         

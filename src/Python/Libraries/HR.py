@@ -4,9 +4,12 @@ Created on Wed Feb 26 18:27:06 2020
 
 @author: Dan
 """
-
+from scipy import signal
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.signal import find_peaks
+from scipy.misc import electrocardiogram
+from Libraries.Data import Data
 
 class HR:
     
@@ -38,3 +41,67 @@ class HR:
         s_diff = np.diff(s,1,0)
         s_diff = np.append(s_diff, 0) #np.diff returns one shorter, so need to add a 0
         return s_diff
+    
+    def calc_heart_rate_freq(signal,fs):
+        
+        t = (signal[:,0] - signal[0,0])/1e6#get the time array
+        plt.clf()
+        print(len(t)/10)
+        Pxx, Freqs = plt.psd(signal[:,4], NFFT=int(len(t)/10), Fs=fs, detrend = 'mean')
+        plt.clf()
+        peaks, _ = find_peaks(Pxx)
+        plt.plot(peaks, Pxx[peaks], "x")
+        plt.plot(Pxx)
+        plt.show()
+        
+    def lowpass(s,fs):
+        filter_order = 3
+        filter_cutoff = 5/(fs/2)
+        b,a = signal.butter(filter_order, filter_cutoff, btype='lowpass')
+        s_filt = signal.lfilter(b,a,s)
+        # plt.plot(s_filt)
+        s = s_filt
+        return s
+        
+    def preprocess(signal,fs):
+        fs = int(fs)
+        signal = HR.signal_diff(signal)
+        # signal = HR.detrend(signal, fs)
+        # plt.clf()
+        # plt.plot(signal)
+        # plt.show()
+        signal = HR.lowpass(signal,fs)
+        # plt.clf()
+        # plt.plot(signal)
+        # plt.show()
+        signal = HR.normalize_signal(signal)
+        # plt.clf()
+        # plt.plot(signal)
+        # plt.show()
+        return signal
+    
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

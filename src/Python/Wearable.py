@@ -9,6 +9,7 @@ from Libraries.Connection import Connection
 from Libraries.Visualize import Visualize
 from Libraries.HR import HR
 from Libraries.Data import Data
+from Libraries.ML import ML
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -53,19 +54,68 @@ def main():
     # wearable = Wearable(serial_name, baud_rate)
     # wearable.main()
     
-    data_array_600 = np.genfromtxt('data/02_01_071.csv', delimiter=',')
-    data_array = data_array_600[:500]
-    # Visualize.plotData(data_array)
-    data = Data()
-    data.add_data(data_array)
-    print(data.get_num_samples())
-    fs = int(data.calc_sampling_rate())
-    [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(data_array[:,4],fs)
-    time = (data_array[:,0] - data_array[0,0])/1e6 #have time start at 0 and in seconds
-    plt.clf()
-    plt.plot(time, HR.normalize_signal(HR.detrend(-data_array[:,4],fs)))
-    plt.plot(time, s_thresh_up)
-    print("BPM = "+str(BPM_Estimate))
+    # data_array_600 = np.genfromtxt('data/02_01_071.csv', delimiter=',')
+    # data_array = data_array_600[:500]
+    # # Visualize.plotData(data_array)
+    # data = Data()
+    # data.add_data(data_array)
+    # print(data.get_num_samples())
+    # fs = int(data.calc_sampling_rate())
+    # [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(data_array[:,4],fs)
+    # time = (data_array[:,0] - data_array[0,0])/1e6 #have time start at 0 and in seconds
+    # plt.clf()
+    # plt.plot(data.data_array[:,4])
+    # plt.show()
+    # plt.clf()
+    # plt.plot(HR.normalize_signal(data.data_array[:,4]))
+    # plt.show()
+    # plt.clf()
+    # plt.plot(HR.moving_average(data.data_array[:,4],fs))
+    # plt.show()
+    # plt.clf()
+    # plt.plot(HR.signal_diff(data.data_array[:,4]))
+    # plt.show()
+    # plt.clf()
+    # plt.plot(HR.detrend(data.data_array[:,4],fs))
+    # plt.show()
+    
+    # print("BPM = "+str(BPM_Estimate))
+    
+# =============================================================================
+# =============================================================================
+# =============================================================================
+# # #     data_array_600 = np.genfromtxt('data/data/training/03_02_079.csv', delimiter=',')
+# # #     data_array = data_array_600[:500]
+# # #     Visualize.plotData(data_array)
+# # #     data = Data()
+# # #     data.add_data(data_array)
+# # #     print(data.get_num_samples())
+# # #     fs = int(data.calc_sampling_rate())
+# # #     
+# # #     [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(data_array[:,4],fs)
+# # #     time = (data_array[:,0] - data_array[0,0])/1e6 #have time start at 0 and in seconds
+# # #     plt.clf()
+# # #     plt.plot(time, HR.normalize_signal(HR.signal_diff(-data_array[:,4])))
+# # #     plt.plot(time, s_thresh_up)
+# # #     print("BPM = "+str(BPM_Estimate)) 
+# =============================================================================
+# =============================================================================
+# =============================================================================
+    # plt.clf()
+    # plt.plot(data_array[:,4])
+    # plt.show()
+    
+    
+
+    ml = ML()
+    ml.train_hr_model('data/data/TRASH/')
+    arr = ml.test_hr_model('data/data/testing/')
+    print(arr)
+    Visualize.plotBandAltmann(arr)
+    
+    
 
 if __name__== "__main__":
     main()
+
+

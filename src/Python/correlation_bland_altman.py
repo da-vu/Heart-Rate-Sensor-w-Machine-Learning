@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 
 gnd =  np.array([71,82,74,80,80,90,87,77,85,85]) #reference heart rate
-est =  np.array([64,75,73,77,76,83,80,72,77,88]) #estimate of your algorithm
+est =  np.array([70,70,70,70,70,70,70,70,70,70]) #estimate of your algorithm
 
 [R,p] = pearsonr(gnd,est)
 
@@ -44,4 +44,5 @@ plt.text(np.max(avg)+5,upper_std,"1.96STD="+str(round(upper_std,2)))
 plt.text(np.max(avg)+5,lower_std,"-1.96STD="+str(round(lower_std,2)))
 plt.ylabel("Difference of Est and Gnd (BPM)")
 plt.xlabel("Average of Est and Gnd (BPM)")
+
 plt.show()
