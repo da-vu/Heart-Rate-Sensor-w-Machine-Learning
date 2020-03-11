@@ -81,7 +81,7 @@ def main():
     
     # print("BPM = "+str(BPM_Estimate))
     
-    data_array_600 = np.genfromtxt('data/data/training/02_01_071.csv', delimiter=',')
+    data_array_600 = np.genfromtxt('data/data_10_083.csv', delimiter=',')
     data_array = data_array_600[:500]
     Visualize.plotData(data_array)
     data = Data()
@@ -92,13 +92,13 @@ def main():
     [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(data_array[:,4],fs)
     time = (data_array[:,0] - data_array[0,0])/1e6 #have time start at 0 and in seconds
     # print(len(time))
-    # plt.clf()
-    # plt.plot(time, HR.normalize_signal(HR.signal_diff(-data_array[:,4])))
-    # plt.plot(time, s_thresh_up)
+    plt.clf()
+    plt.plot(time, HR.normalize_signal(HR.signal_diff(-data_array[:,4])))
+    plt.plot(time, s_thresh_up)
     print("BPM = "+str(BPM_Estimate)) 
     
     
-    HR.calc_heart_rate_freq(data_array[:,4], fs)
+    # HR.calc_heart_rate_freq(data_array[:,4], fs)
     
     # plt.clf()
     # plt.plot(data_array[:,4])
