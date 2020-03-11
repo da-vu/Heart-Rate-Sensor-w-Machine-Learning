@@ -192,35 +192,144 @@ A14596430
  
 ## Challenge 3: Calculate Heart Rate with Frequency Domain Features
 
+**Code:**  
+
+    def calc_heart_rate_freq(signal,fs):
+        signal = HR.preprocess(-signal, fs)
+        Pxx, Freqs = plt.psd(signal, NFFT=500, Fs=fs)
+        while np.argmax(Pxx) == 0:
+            Pxx = np.delete(Pxx, 0)
+            Freqs = np.delete(Freqs, 0)
+        plt.clf()
+        plt.plot(Freqs,Pxx)
+        peaks,_= find_peaks(Pxx, height = 0.01)
+        plt.plot(peaks/10,Pxx[peaks],'x')
+        plt.show()
+        print(Freqs[peaks])
+        BPM = Freqs[peaks[0]]*60
+        print(BPM)
+        return BPM
+
 > Q. What are some failure modes of your frequency domain solution?
-
-> A. 
-
 > Q. Compare and contrast the two different algorithms. Which has a lower error? Which has a bias closer to 0? Do you see any signs of mean tracking in either algorithm? Use the correlation and difference plots to support your argument.
 
-> A.
+> A. The main problem would probably be having to preprocess and filter your signal for the best results. For most of my trials, the freq domain solution seemed more accurate with a closer to 1 R value and a closer to 0 Mean bias. 
+> **Plot Frequency Domain Solution:**  
+>  ![Image of Challenge](fig/l5ch3.png)  
+> **Plot Time Domain Solution:**  
+>  ![Image of Challenge](fig/bamp.png)   
 
 ## Part 2
 
 ## Tutorial 1: Collecting Data
 
+* collected HR signals and reference readings from a separate HR sensor
+* assured data was clean and usable for the ML portion
+
 ## Tutorial 2: List All Files in Directory
 
 > Q. what is the correct regex to get trial “0” for any subject given our naming convention “ID_Trial_HR.csv”.
 
-> A.
+> A.  correct regex = `directory/name/data/*_01_*.csv`  
+> I am assuming trial "0" is the first trial collected. 
 
 ## Tutorial 3: Manipulating Filenames
 
+***Note: I noticed that the workflow for removing the directory path from the file name was easier with `import os`***
+
+**Example Code Snippet using `os` module:**  
+
+    import os
+    import glob
+
+    all_files = [os.path.basename(x) for x in glob.glob('data/data/training/*.csv')]
+    print(all_files)
+The above code should print the desired file names without the directory path
+*Can be viewed in `src/Python/ML.py`*
+
 ## Challenge 4: Data for ML
+
+**Code:**
+
+    list_data = []
+    list_sub = []
+    list_ref = []
+    list_trials = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
+
+
+    for sub_id in unique_ids:#sub_id in the list of unique_ids
+        sub_files = [os.path.basename(x) for x in glob.glob('data/data/training/'+str(sub_id)+'*.csv')]#using glob get the files of all files with this subject id
+        for trial in range(len(sub_files)):#each file in the list of files for this subject
+            file_name = [os.path.basename(x) for x in glob.glob('data/data/training/'+str(sub_id)+'_'+list_trials[trial]+'*.csv')]
+            data = Data()
+            try:
+                data.add_data(np.genfromtxt('data/data/training/'+str(file_name[0]), delimiter=','))#read the csv
+            except:
+                break
+                pass
+
+            data.data_array = data.data_array[:500] # take the first 500
+
+            fs = data.calc_sampling_rate()
+            hr_data = data.data_array[:,4]#get the ppg signal from data using slicing
+            hr_data = HR.preprocess(-hr_data,fs)#preprocess your hr_data:removing baseline, smooth your signal using a low pass filter and normalize. 
+            list_data.append(hr_data)#append the preprocessed data to list_data
+            file = [os.path.basename(x) for x in glob.glob('data/data/training/'+str(sub_id)+'_'+list_trials[trial]+'_*.csv')]#retrieve the reference heart rate from the filename.
+            file=file[0]
+            ref_hr = file[6:9]
+            list_ref.append(ref_hr)#append the reference heart rate to list_ref
+            list_sub.append(sub_id)#append the subject id to list_sub
+
+    list_data = np.vstack(list_data)
 
 > Q. According to the lecture, what is the recommended split between training and testing on a small dataset?
 
-> A.
+> A. 
 
 > Q. Why is it important to split on subjects and not to treat each file as an independent sample?
 
 > A.
+
+### **Visual Documentation that this part works**  
+***Add this code to output lists***
+
+    print("\nunique ids:")
+    print(unique_ids)
+    print("\nlist_data")
+    print(list_data)
+    print("\nshape of list_data")
+    print(np.shape(list_data))
+    print("\nlist_sub")
+    print(list_sub)
+    print("\nlist_ref")
+    print(list_ref)
+
+**Output:**
+![Image of Challenge](fig/l5ch4.JPG)  
+***Text version:***  
+
+    unique ids:
+    ['01', '02', '03', '04', '06', '07', '08', '10', '11', '12']
+
+    list_data
+    [[0.38583681 0.37987901 0.37032232 ... 0.38579295 0.36452265 0.33920506]
+    [0.28808289 0.28171955 0.26587266 ... 0.10561404 0.04952572 0.05152597]
+    [0.30435517 0.34913578 0.45016364 ... 0.7147552  0.55386708 0.39526172]
+    ...
+    [0.33823053 0.33878208 0.34061467 ... 0.28934129 0.28281793 0.28379442]
+    [0.42141184 0.45580621 0.50532689 ... 0.41477819 0.57034085 0.74765259]
+    [0.41239902 0.47102418 0.59481085 ... 0.40200058 0.39489399 0.38692413]]
+
+    shape of list_data
+    (100, 500)
+
+    list_sub
+    ['01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '02', '02', '02', '02', '02', '02', '02', '02', '02', '02', '03', '03', '03', '03', '03', '03', '03', '03', '03', '03', '04', '04', '04', '04', '04', '04', '04', '04', '04', '04', '06', '06', '06', '06', '06', '06', '06', '06', '06', '06', '07', '07', '07', '07', '07', '07', '07', '07', '07', '07', '08', '08', '08', '08', '08', '08', '08', '08', '08', '08', '10', '10', '10', '10', '10', '10', '10', '10', '10', '10', '11', '11', '11', '11', '11', '11', '11', '11', '11', '11', '12', '12', '12', '12', '12', '12', '12', '12', '12', '12']
+
+    list_ref
+    ['068', '071', '071', '071', '071', '080', '084', '090', '090', '097', '071', '082', '074', '080', '080', '090', '087', '077', '085', '085', '079', '079', '070', '073', '075', '122', '102', '102', '101', '102', '065', '064', '065', '066', '066', '067', '071', '073', '075', '062', '074', '073', '071', '071', '074', '078', '076', '079', '075', '069', '059', '062', '058', '062', '060', '086', '111', '061', '089', '069', '074', '075', '076', '077', '078', '080', '085', '087', '089', '102', '085', '096', '110', '086', '095', '077', '105', '083', '091', '075', '071', '104', '092', '066', '085', '067', '070', '067', '065', '090', '077', '078', '092', '084', '085', '112', '096', '085', '133', '106']
+
+
 
 ## Challenge 5: Gaussian Mixture Model for Heart Rate
 

@@ -30,7 +30,7 @@ for file in all_files:
     sub_id = file[:2]
     if sub_id not in unique_ids:
         unique_ids.append(sub_id)
-print(unique_ids)
+
     
 
 
@@ -84,101 +84,118 @@ list_data = np.vstack(list_data)
 # plt.hist(list_data[i],density=True, bins=20)
 # plt.show()
 
+print("\nunique ids:")
+print(unique_ids)
+print("\nlist_data")
 print(list_data)
+print("\nshape of list_data")
 print(np.shape(list_data))
+print("\nlist_sub")
 print(list_sub)
+print("\nlist_ref")
 print(list_ref)
 
 
-train_data = np.array([])#make empty numpy array of size 0
-hold_out_data = np.array([])#make empty numpy array of size 0
-
-
 # =============================================================================
-# for i in range(len(unique_ids[1:])):
-#     print(i)
-#     train_ids=unique_ids[1:]
-#     hold_out_subject = train_ids[i] #for now we’ll hold out the first training subject
-#     for ind, sub_id in enumerate(list_sub):#enumerate the list_sub starting at 0. Look up enumerate function
-#         # print(ind, sub_id)
-#         if sub_id != hold_out_subject:#sub_id is not the same as hold_out_subject) 
-#             train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
-#         else:
-#             hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
-#             # plt.plot(hold_out_data)
-#             # plt.show()
-#     
-#     print(np.shape(train_data))
-#     print(np.shape(hold_out_data))
-#     # print(hold_out_data[i*500:i*500+500])
-#     gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
-#     test_pred = gmm.predict(hold_out_data[i*500:i*500+500].reshape(-1,1))
-#     
-#     [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
-#     plt.clf()
-#     plt.plot(test_pred)
-#     # print(s_thresh_up)
-#     plt.show()
-#     print("Estimated BPM = "+str(BPM_Estimate))  
-#     
-#     print("Real BPM = "+str(list_ref[i*10]))
+# =============================================================================
+# =============================================================================
+# =============================================================================
+# # # # train_data = np.array([])#make empty numpy array of size 0
+# # # # hold_out_data = np.array([])#make empty numpy array of size 0
+# # # # 
+# # # # 
+# # # # # =============================================================================
+# # # # # for i in range(len(unique_ids[1:])):
+# # # # #     print(i)
+# # # # #     train_ids=unique_ids[1:]
+# # # # #     hold_out_subject = train_ids[i] #for now we’ll hold out the first training subject
+# # # # #     for ind, sub_id in enumerate(list_sub):#enumerate the list_sub starting at 0. Look up enumerate function
+# # # # #         # print(ind, sub_id)
+# # # # #         if sub_id != hold_out_subject:#sub_id is not the same as hold_out_subject) 
+# # # # #             train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
+# # # # #         else:
+# # # # #             hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
+# # # # #             # plt.plot(hold_out_data)
+# # # # #             # plt.show()
+# # # # #     
+# # # # #     print(np.shape(train_data))
+# # # # #     print(np.shape(hold_out_data))
+# # # # #     # print(hold_out_data[i*500:i*500+500])
+# # # # #     gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
+# # # # #     test_pred = gmm.predict(hold_out_data[i*500:i*500+500].reshape(-1,1))
+# # # # #     
+# # # # #     [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
+# # # # #     plt.clf()
+# # # # #     plt.plot(test_pred)
+# # # # #     # print(s_thresh_up)
+# # # # #     plt.show()
+# # # # #     print("Estimated BPM = "+str(BPM_Estimate))  
+# # # # #     
+# # # # #     print("Real BPM = "+str(list_ref[i*10]))
+# # # # # 
+# # # # # =============================================================================
+# # # #     # plt.clf()
+# # # #     # plt.plot(hold_out_data[:])
+# # # #     # plt.plot(test_pred[:])
+# # # #     # plt.show()
+# # # #     # plt.hist(hold_out_data[:], density=True, bins=50)
+# # # #     # plt.show()
+# # # # 
+# # # # 
+# # # # # test_pred = gmm.predict(hold_out_data[:].reshape(-1,1))
+# # # # # print(test_pred)
+# # # # 
+# # # # 
+# # # # print("TraingING")
+# # # # 
+# # # # for i in range(len(unique_ids[:])):
+# # # #     train_ids=unique_ids[:]
+# # # #     hold_out_subject = train_ids[i]
+# # # #     for ind, sub_id in enumerate(list_sub):#enumerate the list_sub starting at 0. Look up enumerate function
+# # # #         # print(ind, sub_id)
+# # # #         if sub_id != hold_out_subject:#sub_id is not the same as hold_out_subject) 
+# # # #             train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
+# # # #         else:
+# # # #             hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
+# # # #             # plt.plot(hold_out_data)
+# # # #             # plt.show()
+# # # #     
+# # # #         # print(np.shape(hold_out_data))
+# # # #         # print(np.shape(train_data))
+# # # #         try:
+# # # #             gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
+# # # #         except:
+# # # #             pass
+# # # #         
+# # # # print(np.shape(hold_out_data))
+# # # # 
+# # # # print((hold_out_subject))
+# # # # for x in range(0,len(hold_out_data),500):
+# # # #     # print(x)
+# # # #     trial = hold_out_data[x:x+500]
+# # # #     # plt.clf()
+# # # #     # plt.plot(trial)
+# # # #     # plt.show()
+# # # #     test_pred = gmm.predict(trial.reshape(-1,1))
+# # # #     # plt.plot(i)
+# # # #     # plt.plot(test_pred)
+# # # #     # plt.show()
+# # # #     
+# # # #     # [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
+# # # #     # plt.clf()
+# # # #     # plt.plot(test_pred)
+# # # #     # plt.plot(s_thresh_up)
+# # # #     # plt.show()
+# # # #     # print("Estimated BPM = "+str(BPM_Estimate))  
+# # # # 
+# # # #  
+# # # # 
+# # # # 
+# =============================================================================
+# =============================================================================
+# =============================================================================
 # 
 # =============================================================================
-    # plt.clf()
-    # plt.plot(hold_out_data[:])
-    # plt.plot(test_pred[:])
-    # plt.show()
-    # plt.hist(hold_out_data[:], density=True, bins=50)
-    # plt.show()
-
-
-# test_pred = gmm.predict(hold_out_data[:].reshape(-1,1))
-# print(test_pred)
-
-
-print("TraingING")
-
-for i in range(len(unique_ids[:])):
-    train_ids=unique_ids[:]
-    hold_out_subject = train_ids[i]
-    for ind, sub_id in enumerate(list_sub):#enumerate the list_sub starting at 0. Look up enumerate function
-        # print(ind, sub_id)
-        if sub_id != hold_out_subject:#sub_id is not the same as hold_out_subject) 
-            train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
-        else:
-            hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
-            # plt.plot(hold_out_data)
-            # plt.show()
-    
-        # print(np.shape(hold_out_data))
-        # print(np.shape(train_data))
-        try:
-            gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
-        except:
-            pass
-        
-print(np.shape(hold_out_data))
-
-print((hold_out_subject))
-for x in range(0,len(hold_out_data),500):
-    # print(x)
-    trial = hold_out_data[x:x+500]
-    # plt.clf()
-    # plt.plot(trial)
-    # plt.show()
-    test_pred = gmm.predict(trial.reshape(-1,1))
-    # plt.plot(i)
-    # plt.plot(test_pred)
-    # plt.show()
-    
-    # [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
-    # plt.clf()
-    # plt.plot(test_pred)
-    # plt.plot(s_thresh_up)
-    # plt.show()
-    # print("Estimated BPM = "+str(BPM_Estimate))  
-
- 
 
 
 
@@ -206,35 +223,38 @@ for x in range(0,len(hold_out_data),500):
 
 
 
-
-
-
-
-# ##testing 
-
-data_array = np.genfromtxt('data/data/testing/09_06_066.csv', delimiter=',')
-data = Data()
-data.add_data(data_array)
-fs = data.calc_sampling_rate()
-# print(fs)
-
-hr = data.data_array[:,4]
-hr = HR.preprocess(-hr, fs)
-
-plt.clf()
-plt.plot(hr)
-plt.show()
-       
-test_pred1 = gmm.predict(hr.reshape(-1,1))
-[BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred1,fs)
-plt.clf()
-plt.plot(test_pred1)
-plt.plot(s_thresh_up)
-plt.show()
-print("Estimated BPM = "+str(BPM_Estimate))  
-
-
-print("--- %s seconds ---" % (time.time() - start_time))
+# =============================================================================
+# =============================================================================
+# =============================================================================
+# # # 
+# # # # ##testing 
+# # # 
+# # # data_array = np.genfromtxt('data/data/testing/09_06_066.csv', delimiter=',')
+# # # data = Data()
+# # # data.add_data(data_array)
+# # # fs = data.calc_sampling_rate()
+# # # # print(fs)
+# # # 
+# # # hr = data.data_array[:,4]
+# # # hr = HR.preprocess(-hr, fs)
+# # # 
+# # # plt.clf()
+# # # plt.plot(hr)
+# # # plt.show()
+# # #        
+# # # test_pred1 = gmm.predict(hr.reshape(-1,1))
+# # # [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred1,fs)
+# # # plt.clf()
+# # # plt.plot(test_pred1)
+# # # plt.plot(s_thresh_up)
+# # # plt.show()
+# # # print("Estimated BPM = "+str(BPM_Estimate))  
+# # # 
+# # # 
+# # # print("--- %s seconds ---" % (time.time() - start_time))
+# =============================================================================
+# =============================================================================
+# =============================================================================
 
 
 
