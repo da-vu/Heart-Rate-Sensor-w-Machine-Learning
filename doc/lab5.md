@@ -13,7 +13,7 @@ How might we use the 1.96STD mark to assess if a given estimate might be an outl
 Anything outside of the 1.96STD marks are outliers
 
 Q. If your sampling rate was 120Hz, what would be your maximum frequency (the Nyquist frequency)?
-60 because Fs = 120, Half of the sampling frequency is 60hz which is the highest frequency component that is capture. 
+60 because Fs = 120, Half of the sampling frequency is 60hz which is the highest frequency component that is captured. 
 
 
 Q. If your signal bandwidth is composed of 0-10Hz, what is your minimum sampling rate to capture this signal based on the Nyquist sampling theorem? What would be recommended in general practice however?

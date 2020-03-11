@@ -14,8 +14,9 @@ import matplotlib.pyplot as plt
 
 
 gnd =  np.array([75,74,77,128,86,77,80,85,80,83]) #reference heart rate
-est =  np.array([70.419,70.419,76.287,123.233,64.550,70.419,76.287,82.155,76.287,76.287]) #estimate of your algorithm
-
+# est =  np.array([70.419,70.419,76.287,123.233,64.550,70.419,76.287,82.155,76.287,76.287]) #estimate of your algorithm
+est =  np.array([70,70,70,70,70,70,70,70,70,70]) #estimate of your algorithm
+# est =  np.array([75,74,77,128,86,77,80,85,80,83])
 [R,p] = pearsonr(gnd,est)
 
 plt.figure(1)

@@ -25,7 +25,7 @@ s = HR.detrend(s,fs)
 
 
 filter_order = 3
-filter_cutoff = 5/(fs/2)
+filter_cutoff = 5
 b,a = signal.butter(filter_order, filter_cutoff, btype='lowpass')
 
 
@@ -34,20 +34,29 @@ s_filt = signal.lfilter(b,a,s)
 
 w, h = signal.freqz(b,a)
 
+# plt.plot(w, 20 * np.log10(abs(h)))
+# plt.show()
 
-
+fig = plt.gcf()
+fig.set_size_inches(10, 6)
 plt.clf()
 plt.subplot(311)
 plt.plot(w, 20 * np.log10(abs(h)))
 plt.title("filter resp")
-plt.subplot(323)
+plt.subplot(334)
 plt.plot(s)
-plt.subplot(324)
-plt.psd(s, NFFT=len(t), Fs=fs)
-plt.subplot(325)
+plt.subplot(335)
+Pxx,Freqs = plt.psd(s, NFFT=len(t), Fs=fs)
+plt.subplot(337)
 plt.plot(s_filt)
-plt.subplot(326)
-plt.psd(s_filt, NFFT=len(t), Fs=fs)
+plt.subplot(338)
+Pxx2, Freqs2 = plt.psd(s_filt, NFFT=len(t), Fs=fs)
+plt.subplot(336)
+plt.plot(Freqs,Pxx)
+plt.subplot(339)
+plt.plot(Freqs2,Pxx2)
+
+
 
 
 # plt.clf()
