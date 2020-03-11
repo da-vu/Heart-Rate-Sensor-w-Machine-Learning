@@ -12,8 +12,14 @@ import matplotlib.pyplot as plt
 from Libraries.HR import HR
 from Libraries.Data import Data
 from matplotlib.pyplot import figure
+import os
+import glob
 
 
+all_files = [os.path.basename(x) for x in glob.glob('data/data*.csv')]
+for file in all_files:
+    sub_id = file[:2]
+    
 
 data_array = np.genfromtxt('data/data_01_075.csv', delimiter=',')#get data from Appendix A and save as .csv.
 data = Data()

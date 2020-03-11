@@ -18,7 +18,7 @@ print(data.get_num_samples())
 
 fs = int(data.calc_sampling_rate()) #sampling rate in Hz
 t = (data_array[:,0] - data_array[0,0])/1e6#get the time array
-s = data_array[:,2] #get the x-acceleration array
+s = data_array[:,4] #get the x-acceleration array
 s = HR.detrend(s,fs)
 
 

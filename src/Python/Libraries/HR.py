@@ -43,16 +43,24 @@ class HR:
         return s_diff
     
     def calc_heart_rate_freq(signal,fs):
-        
-        t = (signal[:,0] - signal[0,0])/1e6#get the time array
+        signal = HR.preprocess(-signal, fs)
+        Pxx, Freqs = plt.psd(signal, NFFT=500, Fs=fs)
+        while np.argmax(Pxx) == 0:
+            Pxx = np.delete(Pxx, 0)
+            Freqs = np.delete(Freqs, 0)
         plt.clf()
-        print(len(t)/10)
-        Pxx, Freqs = plt.psd(signal[:,4], NFFT=int(len(t)/10), Fs=fs, detrend = 'mean')
-        plt.clf()
-        peaks, _ = find_peaks(Pxx)
-        plt.plot(peaks, Pxx[peaks], "x")
-        plt.plot(Pxx)
+        plt.plot(Freqs,Pxx)
+        peaks,_= find_peaks(Pxx, height = 0.01)
+        plt.plot(peaks/10,Pxx[peaks],'x')
         plt.show()
+        print(Freqs[peaks])
+        BPM = Freqs[peaks[0]]*60
+        print(BPM)
+        return BPM
+        
+        
+        
+       
         
     def lowpass(s,fs):
         filter_order = 3
