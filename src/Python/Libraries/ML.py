@@ -1,13 +1,12 @@
 import glob
 import os
-#from Libraries.Connection import Connection
-#from Libraries.Visualize import Visualize
 from Libraries.HR import HR
 from Libraries.Data import Data
+from Libraries.Visualize import Visualize
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.mixture import GaussianMixture as GMM
-import time
+
 
 # ../data/data/training/ 
 
@@ -71,11 +70,14 @@ class ML:
         print(list_sub)
         print(list_ref)
         
+        
+        
+        
         train_data = np.array([])#make empty numpy array of size 0
         hold_out_data = np.array([])#make empty numpy array of size 0
-        
-        
-        print("TraingING")
+
+
+        print(" NOW TRAINING")
 
         for i in range(len(unique_ids[:])):
             train_ids=unique_ids[:]
@@ -85,60 +87,93 @@ class ML:
                     train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
                 else:
                     hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
-                    # plt.plot(hold_out_data)
-                    # plt.show()
+                    
                 try:
-                    self.gmm.fit(train_data.reshape(-1,1))
+                    self.gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
                 except:
                     pass
-                
-        print(np.shape(hold_out_data))
+           
+        print(" DONE TRAINING")
         
-        print((hold_out_subject))
+        print("\nShape of hold_out_data & elements of hold_out_data")
+        print(np.shape(hold_out_data))
+        print(hold_out_data)
+
+        list_bpm =[]
         for x in range(0,len(hold_out_data),500):
             trial = hold_out_data[x:x+500]
-            # plt.clf()
-            # plt.plot(trial)
-            # plt.show()
+            fig = plt.gcf()
+            fig.set_size_inches(8, 4)
+            plt.clf()
+            plt.subplot(121)
+            plt.plot(trial)
+            # plt.title("\nPreprocessed heart signal\n Trial #=" +str(int((x/500)+1)))
+            plt.title("\nPreprocessed heart signal\n Reference BPM=" +list_ref[int((x/500))])
             test_pred = self.gmm.predict(trial.reshape(-1,1))
-            # plt.plot(i)
-            # plt.plot(test_pred)
-            # plt.show()
-            
-# =============================================================================
-#             [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
-#             # plt.clf()
-#             # plt.plot(test_pred)
-#             # plt.plot(s_thresh_up)
-#             # plt.show()
-#             print("Estimated BPM = "+str(BPM_Estimate))  
-# =============================================================================
+           
+            [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
+            plt.subplot(122)
+            plt.plot(test_pred)
+            plt.plot(s_thresh_up)
+            plt.title("\nThreshold and prediction test\n Estimated BPM = "+str(BPM_Estimate))
+            plt.show()
+            list_bpm.append(BPM_Estimate) 
+
+        
+        print("\nList_bpm - Estimated BPM of validation sets from trained model") 
+        print(list_bpm)
+
+        int_ref=[]
+        
+        for ref in list_ref:
+            ref = float(ref)
+            int_ref.append(ref)
+        
+        
+        ref_arr=np.array(int_ref)
+        print(ref_arr)
+        bpm_arr=np.array(list_bpm)
+        
+        
+        ref_arr=np.reshape(int_ref,(len(int_ref),1))
+        bpm_arr=np.reshape(list_bpm,(len(list_bpm),1))
+        
+        arrr = np.hstack((ref_arr,bpm_arr))
+        arrr = np.reshape(arrr,(30,2))
+        
+        Visualize.plotBandAltmann(arrr)
+
         
         
 
     def calc_hr(self,s,fs):
+        fig = plt.gcf()
+        fig.set_size_inches(12, 4)
         plt.clf()
+        plt.subplot(131)
         plt.plot(s.data_array[:,4])
-        plt.show()
+        plt.title("Original HR signal")
         
         shr = s.data_array[:,4]
         shr = HR.preprocess(-shr, fs)
-        plt.clf()
+        plt.subplot(132)
         plt.plot(shr)
-        plt.show()
+        plt.title("Preprocessed HR signal")
+       
         
         test_pred = self.gmm.predict(shr.reshape(-1,1))
         ##fixy
         unique,counts=np.unique(test_pred, return_counts=True)
-        print(unique,counts)
+        # print(unique,counts)
         if counts[0] < counts[1]:
-            print("flip time")
+            # print("flip time")
             test_pred = -test_pred + 1
         ##fixy
         [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
-        plt.clf()
+        plt.subplot(133)
         plt.plot(test_pred)
         plt.plot(s_thresh_up)
+        plt.title("Estimated BPM according to GMM\n Estimated BPM = "+str(BPM_Estimate))
         plt.show()
         print("Estimated BPM = "+str(BPM_Estimate))  
         return BPM_Estimate
@@ -184,7 +219,6 @@ class ML:
                 raw_data_obj = Data()
                 raw_data_obj.add_data(raw_data)
                 fs = raw_data_obj.calc_sampling_rate()
-                # print(fs)
                 i=i+1
                 esthr.append(self.calc_hr(raw_data_obj, fs))
                 
@@ -205,150 +239,43 @@ class ML:
         arr= np.reshape(arr,(10,2))
         
         print(np.shape(arr))
-        
+        Visualize.plotBandAltmann(arr)
         
         return arr
             
                 
         
-        
-        # data_array = np.genfromtxt('data/data/testing/09_06_066.csv', delimiter=',')
-        # data = Data()
-        # data.add_data(data_array)
-        # fs = data.calc_sampling_rate()
-        # # print(fs)
-        
-        # hr = data.data_array[:,4]
-        # hr = HR.preprocess(-hr, fs)
-        
-        # plt.clf()
-        # plt.plot(hr)
-        # plt.show()
-               
-        # test_pred1 = gmm.predict(hr.reshape(-1,1))
-        # [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred1,fs)
-        # plt.clf()
-        # plt.plot(test_pred1)
-        # plt.plot(s_thresh_up)
-        # plt.show()
-        # print("Estimated BPM = "+str(BPM_Estimate))  
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        # print(directory)
-        # unique_ids = []
-        # unique_trial = []
-        # ref_hr = []
-        # list_data = np.array([])
-        # # all_files = [os.path.basename(x) for x in glob.glob('data/data/training/*.csv')]#the correct regex)
-        # all_files = [os.path.basename(x) for x in glob.glob(directory+'*.csv')]#the correct regex)
-        # print(all_files)
-        
-        # for file in all_files:
-        #     sub_id = file[:2]
-        #     if sub_id not in unique_ids:
-        #         unique_ids.append(sub_id)
-                
-        # print(unique_ids)
-        # for file in all_files:
-        #     trial = file[3:5]
-        #     if trial not in unique_trial:
-        #         unique_trial.append(trial)
-                
-        # for file in all_files:
-        #     heartbeat = file[6:9]
-        #     ref_hr.append(heartbeat)
-        
-        
-        # i=0
-        # for num in range(len(unique_ids)):
-        #     for trial in range(len(unique_trial)):
-        #         test_data = Data()
-        #         file_name = str(unique_ids[num])+'_'+str(unique_trial[trial])+'_'+str(ref_hr[i]+'.csv')
-        #         print(file_name)
-        #         try:
-        #             test_data.add_data(np.genfromtxt(directory+str(file_name), delimiter=','))#read the csv
-        #             i=i+1
-        #         except:
-        #             pass
-        #         test_data.data_array=test_data.data_array[:500]
-        #         hr_data = test_data.data_array[:,4]
-        #         fs = test_data.calc_sampling_rate()
-        #         hr_data = HR.preprocess(-hr_data,fs)
-        #         list_data=np.concatenate(list_data,hr_data)
-        #     i=i+1
-            
-        
-        # print(np.shape(list_data))
-        # for x in range(0,len(list_data),500):
-        #     trial = list_data[x:x+500]
-        #     # plt.clf()
-        #     # plt.plot(trial)
-        #     # plt.show()
-        #     test_pred = self.gmm.predict(trial.reshape(-1,1))
-        #     # plt.plot(i)
-        #     # plt.plot(test_pred)
-        #     # plt.show()
-        
-        #     BPM_Estimate = ML.calc_hr(test_pred, fs)
-        #     print(BPM_Estimate)
-        
-        
     
-    
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+     

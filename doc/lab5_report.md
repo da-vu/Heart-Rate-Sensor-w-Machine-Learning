@@ -211,9 +211,12 @@ A14596430
         return BPM
 
 > Q. What are some failure modes of your frequency domain solution?
+
+> A. See next answer
+
 > Q. Compare and contrast the two different algorithms. Which has a lower error? Which has a bias closer to 0? Do you see any signs of mean tracking in either algorithm? Use the correlation and difference plots to support your argument.
 
-> A. The main problem would probably be having to preprocess and filter your signal for the best results. For most of my trials, the freq domain solution seemed more accurate with a closer to 1 R value and a closer to 0 Mean bias. 
+> A. The main problem would probably be having to preprocess and filter your signal for the best results. For most of my trials, the freq domain solution seemed more accurate with a closer to 1 R value and a closer to 0 Mean bias.  
 > **Plot Frequency Domain Solution:**  
 >  ![Image of Challenge](fig/l5ch3.png)  
 > **Plot Time Domain Solution:**  
@@ -284,14 +287,14 @@ The above code should print the desired file names without the directory path
 
 > Q. According to the lecture, what is the recommended split between training and testing on a small dataset?
 
-> A. 
+> A. According to the lecture, the recommended split `70% training/15% validation/15% testing` 
 
 > Q. Why is it important to split on subjects and not to treat each file as an independent sample?
 
-> A.
+> A. For this lab, it is important to split on subjects rather than files because each subject's (person, in this case) HR sample are not equal because some people may have different types of HR signals.
 
-### **Visual Documentation that this part works**  
-***Add this code to output lists***
+### **Visual Documentation to prove that this part works**  
+***Add this code (below) to the code (above) to output lists***
 
     print("\nunique ids:")
     print(unique_ids)
@@ -335,6 +338,351 @@ The above code should print the desired file names without the directory path
 
 > Q. What is the difference between leave-one-out validation and leave-one-subject-out validation? Which are we doing and why is this important, and why would it be an issue if we used the other validation method given what we are building?
 
-> A.
+> A. Both methods of validation are cross-validations but, in the case of `leave-one-out validation` we train all samples BUT one, and then cycle through the next sample, each time holding out a different sample while training the rest. In `leave-one-subject-out validation`, we group the data into N groups based on unique subjects and then hold out a unique subject each fold while training the rest; similarly cycling to the next unique subject each fold. For our lab, we are doing `leave-one-subject-out validation` because each unique subject's HR signal are not equal. This is important because we are training on a GMM model with 2-components (unique to different types of HR signals) and we also want to validate our algorithm on a unique dataset. Without doing this we might run into inconsistency errors in training from different HR signals. 
+
+### **Documentation**
+
+**Code:**  
+*Note: I only use 30 Trials (3 subjects, 10 samples each) to speed up the training iteration*
+
+    train_data = np.array([])#make empty numpy array of size 0
+    hold_out_data = np.array([])#make empty numpy array of size 0
+
+
+    print(" NOW TRAINING")
+
+    for i in range(len(unique_ids[:])):
+        train_ids=unique_ids[:]
+        hold_out_subject = train_ids[i]
+        for ind, sub_id in enumerate(list_sub):#enumerate the list_sub starting at 0. Look up enumerate function
+            if sub_id != hold_out_subject:#sub_id is not the same as hold_out_subject) 
+                train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
+            else:
+                hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
+                
+            try:
+                gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
+            except:
+                pass
+            
+    print(" DONE TRAINING")
+
+**At this point, the GMM is done training all the train data as well as sorting out the hold-out data for validation**
+
+    print("Shape of hold_out_data & elements of hold_out_data")
+    print(np.shape(hold_out_data))
+    print(hold_out_data)
+
+**Output:**
+
+    Shape of hold_out_data & elements of hold_out_data
+    (15000,)
+    [0.38583681 0.37987901 0.37032232 ... 0.40200058 0.39489399 0.38692413]
+
+**Now, we will validate the hold-out data**  
+*We validate it 500 samples at a time (equivalent to 1 trial)*
+
+    list_bpm =[]
+    for x in range(0,len(hold_out_data),500):
+        trial = hold_out_data[x:x+500]
+        fig = plt.gcf()
+        fig.set_size_inches(8, 4)
+        plt.clf()
+        plt.subplot(121)
+        plt.plot(trial)
+        plt.title("\nPreprocessed heart signal\n Reference BPM=" +list_ref[int((x/500))])
+        test_pred = gmm.predict(trial.reshape(-1,1))
+    
+        [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
+        plt.subplot(122)
+        plt.plot(test_pred)
+        plt.plot(s_thresh_up)
+        plt.title("Threshold and prediction test\n Estimated BPM = "+str(BPM_Estimate))
+        plt.show()
+        list_bpm.append(BPM_Estimate) 
+
+**After, each validation iteration, I plot the preprocessed HR signal & GMM predicted BPM estimate**  
+*Example Plot:*  
+![Image of Challenge](fig/l5ch5-1.png)  
+*I only display (1) of the many plots to save space, each iteration will output a plot*
+
+**Finally, I check to see how accurate the validation from the hold-out dataset was by using the RMSE & BlandAltmann Plots**
+
+    print("List_bpm - Estimated BPM of validation sets from trained model") 
+    print(list_bpm)
+
+    int_ref=[]
+
+    for ref in list_ref:
+        ref = float(ref)
+        int_ref.append(ref)
+
+    ref_arr=np.array(int_ref)
+    ref_array.astype(float)
+    bpm_arr=np.array(list_bpm)
+
+
+    ref_arr=np.reshape(int_ref,(len(int_ref),1))
+    bpm_arr=np.reshape(list_bpm,(len(list_bpm),1))
+
+    arrr = np.hstack((ref_arr,bpm_arr))
+    arrr = np.reshape(arrr,(30,2))
+
+    Visualize.plotBandAltmann(arrr)
+
+**Plot:**  
+![Image of Challenge](fig/l5ch5-2.png)  
 
 ## Challenge 6: OOP
+
+### **OOP Code**
+
+**Imported modules**
+
+    import glob
+    import os
+    from Libraries.HR import HR
+    from Libraries.Data import Data
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from sklearn.mixture import GaussianMixture as GMM
+
+**ML class constructor:**
+
+    def __init__(self):
+            self.gmm = GMM(n_components = 2)
+*Each instance of the ML class will have its own GMM*
+
+**Code for train_hr_model(directory):**
+
+    def train_hr_model(self, directory):
+            print(directory)
+            unique_ids = []
+            # all_files = [os.path.basename(x) for x in glob.glob('data/data/training/*.csv')]
+            all_files = [os.path.basename(x) for x in glob.glob(directory+'*.csv')]
+            
+            for file in all_files:
+                sub_id = file[:2]
+                if sub_id not in unique_ids:
+                    unique_ids.append(sub_id)
+            print(unique_ids)
+            
+            list_data = []
+            list_sub = []
+            list_ref = []
+            list_trials = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']
+            
+            for sub_id in unique_ids:#sub_id in the list of unique_ids
+                sub_files = [os.path.basename(x) for x in glob.glob(directory+str(sub_id)+'*.csv')]#using glob get the files of all files with this subject id
+                for trial in range(len(sub_files)):#each file in the list of files for this subject
+                    file_name = [os.path.basename(x) for x in glob.glob(directory+str(sub_id)+'_'+list_trials[trial]+'*.csv')]
+                    data = Data()
+                    try:
+                        data.add_data(np.genfromtxt(directory+str(file_name[0]), delimiter=','))#read the csv
+                    except:
+                        break
+                        pass
+                    data.data_array = data.data_array[:500]
+                    fs = data.calc_sampling_rate()
+                    hr_data = data.data_array[:,4]#get the ppg signal from data using slicing
+                    hr_data = HR.preprocess(-hr_data,fs)#preprocess your hr_data:removing baseline, smooth your signal using a low pass filter and normalize. 
+                    list_data.append(hr_data)
+                    file = [os.path.basename(x) for x in glob.glob(directory+str(sub_id)+'_'+list_trials[trial]+'_*.csv')]
+                    file=file[0]
+                    ref_hr = file[6:9]
+                    list_ref.append(ref_hr)
+                    list_sub.append(sub_id)
+                    
+            list_data = np.vstack(list_data)
+            print(list_data)
+            print(np.shape(list_data))
+            print(list_sub)
+            print(list_ref)
+            
+            train_data = np.array([])#make empty numpy array of size 0
+            hold_out_data = np.array([])#make empty numpy array of size 0
+
+            print(" NOW TRAINING")
+
+            for i in range(len(unique_ids[:])):
+                train_ids=unique_ids[:]
+                hold_out_subject = train_ids[i]
+                for ind, sub_id in enumerate(list_sub):#enumerate the list_sub starting at 0. Look up enumerate function
+                    if sub_id != hold_out_subject:#sub_id is not the same as hold_out_subject) 
+                        train_data = np.concatenate((train_data, list_data[ind]))#concatenate numpy array train_data with the list_data at ind
+                    else:
+                        hold_out_data = np.concatenate((hold_out_data, list_data[ind]))#concatenate numpy array hold_out_data with list_data at ind
+                        
+                    try:
+                        self.gmm = GMM(n_components = 2).fit(train_data.reshape(-1,1))
+                    except:
+                        pass
+            
+            print(" DONE TRAINING")
+            
+            print("\nShape of hold_out_data & elements of hold_out_data")
+            print(np.shape(hold_out_data))
+            print(hold_out_data)
+
+            list_bpm =[]
+            for x in range(0,len(hold_out_data),500):
+                trial = hold_out_data[x:x+500]
+                fig = plt.gcf()
+                fig.set_size_inches(8, 4)
+                plt.clf()
+                plt.subplot(121)
+                plt.plot(trial)
+                # plt.title("\nPreprocessed heart signal\n Trial #=" +str(int((x/500)+1)))
+                plt.title("\nPreprocessed heart signal\n Reference BPM=" +list_ref[int((x/500))])
+                test_pred = self.gmm.predict(trial.reshape(-1,1))
+            
+                [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
+                plt.subplot(122)
+                plt.plot(test_pred)
+                plt.plot(s_thresh_up)
+                plt.title("\nThreshold and prediction test\n Estimated BPM = "+str(BPM_Estimate))
+                plt.show()
+                list_bpm.append(BPM_Estimate) 
+
+            print("\nList_bpm - Estimated BPM of validation sets from trained model") 
+            print(list_bpm)
+
+            int_ref=[]
+            
+            for ref in list_ref:
+                ref = float(ref)
+                int_ref.append(ref)
+            
+            ref_arr=np.array(int_ref)
+            print(ref_arr)
+            bpm_arr=np.array(list_bpm)
+            
+            ref_arr=np.reshape(int_ref,(len(int_ref),1))
+            bpm_arr=np.reshape(list_bpm,(len(list_bpm),1))
+            
+            arrr = np.hstack((ref_arr,bpm_arr))
+            arrr = np.reshape(arrr,(30,2))
+            
+            Visualize.plotBandAltmann(arrr)
+
+*The code displayed above is mostly a replication of the code displayed and explained in Challenge 5. The main difference is that `gmm` before is now `self.gmm` because in OOP each ML instance will have its own model. For the sake of brevity, I will not re-explain it here*
+
+**Code for calc_hr(s,fs):**
+
+    def calc_hr(self,s,fs):
+            fig = plt.gcf()
+            fig.set_size_inches(12, 4)
+            plt.clf()
+            plt.subplot(131)
+            plt.plot(s.data_array[:,4])
+            plt.title("Original HR signal")
+            
+            shr = s.data_array[:,4]
+            shr = HR.preprocess(-shr, fs)
+            plt.subplot(132)
+            plt.plot(shr)
+            plt.title("Preprocessed HR signal")
+        
+            test_pred = self.gmm.predict(shr.reshape(-1,1))
+            ##fixy
+            unique,counts=np.unique(test_pred, return_counts=True)
+            # print(unique,counts)
+            if counts[0] < counts[1]:
+                # print("flip time")
+                test_pred = -test_pred + 1
+            ##fixy
+            [BPM_Estimate, s_thresh_up] = HR.calc_heart_rate_time(test_pred,fs)
+            plt.subplot(133)
+            plt.plot(test_pred)
+            plt.plot(s_thresh_up)
+            plt.title("Estimated BPM according to GMM")
+            plt.show()
+            print("Estimated BPM = "+str(BPM_Estimate))  
+            return BPM_Estimate
+*The code above takes a raw signal and a sampling rate to calculate an estimated BPM based on its trained GMM*  
+* It plots the raw signal, the preprocessed signal, and the GMM prediction 
+* The code in-between the `fixy` comments fixes the test prediction due to an random error I noticed while iterating tests. I might explain it as part of the grand challenge (as a plus)
+* It also prints and returns the BPM estimate
+**Example Plot:**
+![Image of Challenge](fig/l5ch6-1.png) 
+
+**Code for test_hr_model(directory):**
+
+    def test_hr_model(self,directory):
+            unique_ids = []
+            unique_trial = []
+            ref_hr = []
+            esthr=[]
+            arr=np.array([])
+            all_files = [os.path.basename(x) for x in glob.glob(directory+'*.csv')]
+            
+            for file in all_files:
+                sub_id = file[:2]
+                if sub_id not in unique_ids:
+                    unique_ids.append(sub_id)
+                    
+            print(unique_ids)
+            for file in all_files:
+                trial = file[3:5]
+                if trial not in unique_trial:
+                    unique_trial.append(trial)
+                    
+            for file in all_files:
+                heartbeat = file[6:9]
+                ref_hr.append(heartbeat)
+            
+            i=0
+            for num in range(len(unique_ids)):
+                for trial in range(len(unique_trial)):
+                    file_name = str(unique_ids[num])+'_'+str(unique_trial[trial])+'_'+str(ref_hr[i]+'.csv')
+                    print(file_name)
+                    raw_data=np.genfromtxt(directory+file_name, delimiter=',')
+                    raw_data=raw_data[:500]
+                    raw_data_obj = Data()
+                    raw_data_obj.add_data(raw_data)
+                    fs = raw_data_obj.calc_sampling_rate()
+                    i=i+1
+                    esthr.append(self.calc_hr(raw_data_obj, fs))
+                    
+            ref_hr = []
+            for file in all_files:
+                heartbeat = float(file[6:9])
+                ref_hr.append(heartbeat)
+            
+            ref_arr=np.array(ref_hr)    
+            est_arr=np.array(esthr)  
+        
+            ref_arr=np.reshape(ref_arr,(ref_arr.size,1))
+            est_arr=np.reshape(est_arr,(est_arr.size,1))
+        
+            arr = np.hstack((ref_arr,est_arr))
+            arr= np.reshape(arr,(10,2))
+            
+            print(np.shape(arr))
+            Visualize.plotBandAltmann(arr)
+            
+            return arr
+
+*The code above will accept a given directory and use the files in that directory to test and calculate the estimated HR BPM for each trial*  
+* It will parse the raw data to collect the desired HR signal
+* It will also parse the file name to get the `subject ID/trial number/Reference HR`
+* It will then call ML.calc_hr(signal,fs) to calculate the heart rate for each trial
+    * This will effectively also plot the raw signal, preprocessed signal, and estimated GMM as described in calc_hr (above)
+* Finally, it will store the reference HR and estimated HR into a 2 column array and then plot the RMSE and Bland-Altmann plots so we can analyze its performance
+* It was also return this 2 column array  
+**RMSE and Bland-Altmann Plots for performance analysis:**
+![Image of Challenge](fig/l5ch6-3.png)  
+*This is the performance analysis plot for `Subject_ID = 11`. As we can see the GMM's prediction is mostly well correlated with a close to 1 R-value(0.96) and a relatively close to 0 mean-bias value. One of the trial estimates were an outlier as seen in the Bland-Altmann plot since it is below the lower limit of agreement. The accuracy RMSE value is 7.533 a little high but probably because of the outlier.  
+
+**Code to call the functions above:**
+
+    ml = ML()
+    ml.train_hr_model('data/data/TRASH/')
+    ml.test_hr_model('data/data/testing/')
+*This code may seem trivial but to explain my understanding of OOP, the above code creates an instance of the ML class and then calls its methods to train a GMM and then test it on a dataset.*
+
+### **End of Report**
+
+### *Notes:*
+* the directory `/data/data/TRASH/` is the directory in which I use to train the GMM in this report. There is less files/trials here in order to speed of the iteration process of the training. From my test runs, a lower amount of training did not affect the performance of the GMM predictions that much, possible because the prediction task is quite simple. 
+* The reason I did not include gifs is because I did not think it could capture and document my understanding of the lab objectives well. Although gifs are really good at showing that hardware runs and works, and perhaps showing that code runs, I did not think that it would be needed in this lab due to the absence of hardware involvement.  
