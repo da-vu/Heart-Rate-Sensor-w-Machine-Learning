@@ -4,9 +4,10 @@ int timer_seconds = 0;
 
 
 //===========Gesture var======//
-int uthreshZ;//determine the upper threshold you need
-int uthreshY;
-int uthreshX;
+int uthreshZ = 3667;
+int uthreshY = 2737;
+int uthreshX = 2799;
+
 
 int lthreshZ;//determine the lower threshold you need
 int lthreshY;
@@ -72,6 +73,7 @@ void Lab2_C4(){
 
 void lab3(){
   sendData();
+  stateMachineTimer();
 }
 
 
@@ -87,13 +89,11 @@ void setup() {
   setupMotor();
   setupADC();
   setupHR();
- // calibrate(); //determines resting threshold - takes ~15 seconds
+  calibrate(); //determines resting threshold - takes ~15 seconds
   
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
- // Lab2_C3();
- // stateMachineTimer();
   lab3();
 }

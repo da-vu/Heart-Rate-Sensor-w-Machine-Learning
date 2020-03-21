@@ -22,12 +22,13 @@ void runTimer(){
 void runTimerOLED(){
   while(timer_seconds > 0){
     timer_seconds--;
-     char message_buffer[4];
+    char message_buffer[4];
     String stringTime = String(timer_seconds); //convert timer_seconds to string
     stringTime.toCharArray(message_buffer,4); //convert string to char buffer
     showMessage(message_buffer, 1, true);
     delay(1000);
   }
+  return;
 }
 
 void stateMachineTimer(){
@@ -55,8 +56,10 @@ void stateMachineTimer(){
   }
   else if(timer_state == 3){
     buzzMotor(255);
+    digitalWrite(yellow_led, HIGH);
     if(detectTap()){
       buzzMotor(0);
+      digitalWrite(yellow_led, LOW);
       timer_state = 0;
       delay(10);
       showMessage("Tap to start", 1, true);

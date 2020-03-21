@@ -31,7 +31,7 @@ class Wearable:
         self.connection.end_streaming()
     
     def main(self):
-        self.collect_data(600)
+        self.collect_data(500)
         self.connection.close_connection()
         collected_data = self.connection.data
         fs = int(collected_data.calc_sampling_rate()) #round to nearest int
@@ -42,17 +42,24 @@ class Wearable:
         plt.clf()
         plt.plot(time, HR.normalize_signal(HR.detrend(-data_array[:,4],fs)))
         plt.plot(time, s_thresh_up)
-        print("BPM = "+str(BPM_Estimate))        
+        print("BPM = "+str(BPM_Estimate))      
+        
+
+def ML_main():
+    ml = ML()
+    ml.train_hr_model('data/data/TRASH/')
+    ml.test_hr_model('data/data/testing/')
+    
 
         
             
 
 def main():
-    # serial_name = 'COM3'
+    serial_name = 'COM5'
     # serial_name = '/dev/cu.usbserial-143220'
-    # baud_rate = 115200
-    # wearable = Wearable(serial_name, baud_rate)
-    # wearable.main()
+    baud_rate = 115200
+    wearable = Wearable(serial_name, baud_rate)
+    wearable.main()
     
     # data_array_600 = np.genfromtxt('data/02_01_071.csv', delimiter=',')
     # data_array = data_array_600[:500]
@@ -114,15 +121,15 @@ def main():
     
     
 
-    ml = ML()
-    ml.train_hr_model('data/data/TRASH/')
-    ml.test_hr_model('data/data/testing/')
+    # ml = ML()
+    # ml.train_hr_model('data/data/TRASH/')
+    # ml.test_hr_model('data/data/testing/')
     
     
     
     
 
 if __name__== "__main__":
-    main()
+    ML_main()
 
 

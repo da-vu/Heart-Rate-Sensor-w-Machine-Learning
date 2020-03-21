@@ -42,8 +42,7 @@ class ML:
                 try:
                     data.add_data(np.genfromtxt(directory+str(file_name[0]), delimiter=','))#read the csv
                 except:
-                    break
-                    pass
+                    continue
                 data.data_array = data.data_array[:500]
                 fs = data.calc_sampling_rate()
                 hr_data = data.data_array[:,4]#get the ppg signal from data using slicing

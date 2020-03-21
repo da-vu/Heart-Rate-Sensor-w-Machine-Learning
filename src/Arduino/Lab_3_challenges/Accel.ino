@@ -37,19 +37,19 @@ void printADC(){ //print the ADC values
   Serial.print(accelY_Val);  
   Serial.print(" ");
   accelX_Val = analogRead(accelX);
-  Serial.print(accelX_Val); 
-  Serial.print(" ");
-  Serial.print(lthreshZ);
-  Serial.print(" ");
-  Serial.print(uthreshZ);
-  Serial.print(" ");
-  Serial.print(lthreshY);
-  Serial.print(" ");
-  Serial.print(uthreshY);
-  Serial.print(" ");
-  Serial.print(lthreshX);
-  Serial.print(" ");
-  Serial.println(uthreshX);
+  Serial.println(accelX_Val); 
+//  Serial.print(" ");
+//  Serial.print(lthreshZ);
+//  Serial.print(" ");
+//  Serial.print(uthreshZ);
+//  Serial.print(" ");
+//  Serial.print(lthreshY);
+//  Serial.print(" ");
+//  Serial.print(uthreshY);
+//  Serial.print(" ");
+//  Serial.print(lthreshX);
+//  Serial.print(" ");
+//  Serial.println(uthreshX);
 
   
  /* Serial.print(lthreshZ);

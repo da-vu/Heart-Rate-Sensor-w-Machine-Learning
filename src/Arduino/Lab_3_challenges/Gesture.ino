@@ -3,18 +3,12 @@ unsigned long t = millis();
 
 // ===== Gesture Code  ========//
 bool detectTap(){
-  //read the ADC values. Note that the ADC values are global so you don’t need to define a local variable for them. 
-  readADC();
-  bool tap_detected = false; // first set to false
-  if(accelZ_Val >= uthreshZ && accelY_Val >= uthreshY && accelX_Val >= uthreshX){
-   // printADC();
-    tap_detected = true; //if the accel values meet the rule, set to true
-  }
-  else if(accelZ_Val <= lthreshZ && accelY_Val <= lthreshY && accelX_Val <= lthreshX){
-   // printADC();
-    tap_detected = true;
-  }
-  return tap_detected;
+    readADC();
+    bool tap_detected = false;
+    if(accelZ_Val >= uthreshZ && accelY_Val >= uthreshY && accelX_Val >= uthreshX){
+        tap_detected = true; 
+    }
+    return tap_detected;
 }
 
 void calibrate(){
